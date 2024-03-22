@@ -1,27 +1,39 @@
 /* eslint-disable react/prop-types */
+import { useDispatch } from "react-redux";
 import classes from "./CartItem.module.css";
+import { cartActions } from "../../store/cart";
 
 const CartItem = (props) => {
-    const { title, quantity, total, price } = props.item;
+    const dispatchActions = useDispatch();
+
+    const { id, name, qty, total, price } = props.item;
+
+    const incrementQtyHandler = () => {
+        dispatchActions(cartActions.addItemToCart({ id, name, price }));
+    };
+
+    const decrementQtyHandler = () => {
+        dispatchActions(cartActions.removeItemFromCart(id));
+    };
 
     return (
         <li className={classes.item}>
             <header>
-                <h3>{title}</h3>
+                <h3>{name}</h3>
                 <div className={classes.price}>
-                    ${total.toFixed(2)}{" "}
+                    Rs {total.toFixed(2)}{" "}
                     <span className={classes.itemprice}>
-                        (${price.toFixed(2)}/item)
+                        (Rs {price.toFixed(2)}/item)
                     </span>
                 </div>
             </header>
             <div className={classes.details}>
                 <div className={classes.quantity}>
-                    x <span>{quantity}</span>
+                    x <span>{qty}</span>
                 </div>
                 <div className={classes.actions}>
-                    <button>-</button>
-                    <button>+</button>
+                    <button onClick={decrementQtyHandler}>-</button>
+                    <button onClick={incrementQtyHandler}>+</button>
                 </div>
             </div>
         </li>
